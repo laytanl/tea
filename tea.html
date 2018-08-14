@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>tea</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"></script>
+    <script>
+        $(function () {
+            let drinkList = ['红茶', '绿茶', '乌龙茶', '黑茶'];
+            let suger = ['多糖', '半糖', '少糖', '无糖'];
+            let sizes = ['大杯', '中杯', '小杯'];
+            let burds = ['红豆', '珍珠', '椰果', '牛奶'];
+            let ices = ['常温', '加冰'];
+            for (const s of suger) {
+                $('#suger').append($('<button type="button" class="btn btn-outline-danger ml-3">').popover("hide").text(s));
+            }
+            for (const ice of ices) {
+                $('#ice').append($('<button type="button" class="btn btn-outline-danger ml-3">').text(ice));
+            }
+            for (const burd of burds) {
+                $('#burd').append($('<button type="button" class="btn btn-outline-danger ml-3">').text(burd));
+            }
+            for (const size of sizes) {
+                $('#size').append($('<button type="button" class="btn btn-outline-danger ml-3">').text(size));
+            }
+            for (const drink of drinkList) {
+                $('#drinks').append($('<option>').text(drink));
+            }
+            $('#ice button').on(
+                'click',
+                function () {
+                    $(this).addClass('active');
+                    $(this).siblings().removeClass('active')
+                }
+            )
+            $('#size button').on(
+                'click',
+                function () {
+                    $(this).addClass('active');
+                    $(this).siblings().removeClass('active')
+                }
+            )
+            $('#suger button').on(
+                'click',
+                function () {
+                    $(this).addClass('active');
+                    $(this).siblings().removeClass('active')
+                }
+            )
+            $('#burd button').on(
+                'click',
+                function () {
+                    if ($(this).hasClass('active')) {
+                        $(this).removeClass('active');
+                    } else {
+                        $(this).addClass('active');
+                    }
+
+                }
+            )
+
+            $('#order').on(
+                'click',
+                function () {
+                    let m = "";
+                    let drinks = $('#drinks option:selected').text();
+                    m = m + drinks + "-";
+                    let size = $('#size .active').text();
+                    m = m + size + "-";
+                    let suger = $('#suger .active').text();
+                    m = m + suger + "-";
+                    let ice = $('#ice .active').text();
+                    m = m + ice + "-" + "[";
+                    let burds = $('#burd .active');
+                    for (const burd of burds) {
+                        let b = $(burd).text();
+                        m = m + b + "-";
+                    }
+                    m = m + "]";
+                    console.log(m);
+                    let row = $('<tr>').html(
+                        `
+                        <td scope="row">${drinks}</td>
+                                <td>${size}</td>
+                                <td>${suger}</td>
+                                <td>${ice}</td>
+                                <td colspan="2">
+                                    <span class="badge badge-pill badge-danger">${burds.text()}</span>
+                                    </td>
+                                <td><button type="button" class="m btn btn-primary btn-block btn-sm">${'出货'}</button></td>      
+                    `
+                    )
+                    $('.tbody').append(row);
+                    $('.tbody button').on(
+                        'click',
+                        function () {
+                            $(this).parent().parent().remove();
+                        }
+                    )
+                    $(' button').removeClass('active');
+                }
+            )
+        })
+    </script>
+
+
+
+</head>
+
+<body>
+    <!-- 展板 -->
+    <div class="jumbotron jumbotron-fluid bg-success">
+        <div class="container">
+            <h1 class="display-3">喜茶</h1>
+            <p class="lead">订单平台</p>
+        </div>
+    </div>
+
+    <!-- 容器：响应式 -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 点单 -->
+            <div class="col-lg-6 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h4 class="card-title">饮品</h4>
+                                <div class="form-group">
+                                    <select class="form-control" name="" id="drinks">
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="list-group-item ">
+                                <!-- 容量 -->
+                                <div id="size" class="form-group mt-2">
+                            </li>
+                            <!-- 糖 -->
+                            <li class="list-group-item">
+                                <div id="suger" class="form-group mt-2">
+                                    <label for="">甜度</label>
+                                    <br>
+                                </div>
+                            </li>
+                            <!-- 加冰 -->
+                            <li class="list-group-item">
+                                <div id="ice" class="form-group mt-2">
+                                    <label for="">温度</label>
+                                    <br>
+                                </div>
+                            </li>
+                            <!-- 配料 -->
+                            <li class="list-group-item">
+                                <div id="burd" class="form-group mt-2">
+                                    <label for="">配料</label>
+                                    <br>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <!-- 提交 -->
+                        <button id="order" type="button" class="btn btn-success btn-lg btn-block mt-3">下单</button>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- 订单 -->
+                <div class="col-lg-6 col-sm-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>饮品</th>
+                                <th>规格</th>
+                                <th>糖</th>
+                                <th>温度</th>
+                                <th colspan="2">配料</th>
+                                <th>出货</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+            crossorigin="anonymous"></script>
+</body>
+
+</html>
